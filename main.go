@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net"
 	"os"
+
+	messageproducer "github.com/riosw/go-EventStream-SocketProducer/messageProducer"
 )
 
 func main() {
@@ -16,20 +18,27 @@ func main() {
 		os.Exit(1)
 	}
 	defer listener.Close()
+
 	fmt.Printf("Server Socket is Listening on Port %s \n", PORT)
+
 	conn, err := listener.Accept()
+
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	fmt.Println("Connection Accepted")
 	defer conn.Close()
 
-	scanner := bufio.NewScanner(os.Stdin)
+	fmt.Println("Connection Accepted")
+
+	generator := messageproducer.SimpleStringMessageGenerator{
+		StringMessage: "car",
+	}
+
 	writer := bufio.NewWriter(conn)
 
-	for scanner.Scan() {
-		n, err := writer.WriteString(scanner.Text() + "\n")
+	for {
+		n, err := writer.WriteString(generator.EmitMessage().Content + "\n")
 
 		if err != nil {
 			fmt.Println(err)
