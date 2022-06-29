@@ -1,10 +1,10 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"net"
 	"os"
+	"time"
 
 	messageproducer "github.com/riosw/go-EventStream-SocketProducer/messageProducer"
 )
@@ -31,14 +31,12 @@ func main() {
 
 	fmt.Println("Connection Accepted")
 
-	generator := messageproducer.SimpleStringMessageGenerator{
-		StringMessage: "car",
+	generator := messageproducer.SimpleString{
+		StringMessage: "bar",
 	}
 
-	writer := bufio.NewWriter(conn)
-
 	for {
-		n, err := writer.WriteString(generator.EmitMessage().Content + "\n")
+		n, err := conn.Write([]byte(generator.EmitMessage() + "\n"))
 
 		if err != nil {
 			fmt.Println(err)
@@ -46,10 +44,6 @@ func main() {
 		}
 		fmt.Printf("%d bytes written to connection\n", n)
 
-		err = writer.Flush()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
+		time.Sleep(1 * time.Second)
 	}
 }

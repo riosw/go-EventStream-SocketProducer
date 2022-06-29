@@ -3,18 +3,17 @@ package messageproducer
 import (
 	"testing"
 
-	mgor "github.com/riosw/go-EventStream-SocketProducer/messageProducer"
+	messageproducer "github.com/riosw/go-EventStream-SocketProducer/messageProducer"
 )
 
 func TestSimpleMessage(t *testing.T) {
-	generator := mgor.SimpleStringMessageGenerator{
+	generator := messageproducer.SimpleString{
 		StringMessage: "car",
 	}
 
-	message := generator.EmitMessage().Content
+	message := generator.EmitMessage()
 
 	if message != "car" {
 		t.Fatalf("Did not receive message 'car'")
 	}
-
 }

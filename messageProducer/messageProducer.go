@@ -1,17 +1,24 @@
 package messageproducer
 
-type MessageProducer interface {
-	EmitMessage()
+type MessageProducer[M message] interface {
+	EmitMessage() M
 }
 
-type message struct {
-	Content string
+// Allow message to be this way to allow more types in the future
+// TODO : add json type
+type message interface {
+	[]byte | []rune | string
 }
 
-type SimpleStringMessageGenerator struct {
+// A simple generator
+type SimpleString struct {
 	StringMessage string
 }
 
-func (generator *SimpleStringMessageGenerator) EmitMessage() message {
-	return message{Content: generator.StringMessage}
+func (generator SimpleString) EmitMessage() string {
+	return generator.StringMessage
+}
+
+type MessageSender interface {
+	SendMessage() error
 }
