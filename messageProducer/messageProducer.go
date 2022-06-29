@@ -15,10 +15,23 @@ type SimpleString struct {
 	StringMessage string
 }
 
-func (generator SimpleString) EmitMessage() string {
+func (generator *SimpleString) EmitMessage() string {
 	return generator.StringMessage
 }
 
 type MessageSender interface {
 	SendMessage() error
+}
+
+// We can also make a more complex generator like this
+
+type OrderedSelection struct {
+	OrderedValues  []string
+	currentPointer int
+}
+
+func (generator *OrderedSelection) EmitMessage() string {
+	msg := generator.OrderedValues[generator.currentPointer]
+	generator.currentPointer = (generator.currentPointer + 1) % len(generator.OrderedValues)
+	return msg
 }
